@@ -1,0 +1,236 @@
+{
+    "data": [
+        {
+            "code": "0021",
+            "name": "Banka Muameleleri Vergisi",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0061",
+            "name": "KKDF Kesintisi",
+            "has_vat": false,
+            "is_stoppage": true,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0071",
+            "name": "ÖTV 1. Liste",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": 0
+        },
+        {
+            "code": "9077",
+            "name": "ÖTV 2. Liste",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0073",
+            "name": "ÖTV 3. Liste",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0074",
+            "name": "ÖTV 4. Liste",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0075",
+            "name": "ÖTV 3A Liste",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0076",
+            "name": "ÖTV 3B Liste",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0077",
+            "name": "ÖTV 3C Liste",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "1047",
+            "name": "Damga Vergisi",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "1048",
+            "name": "5035 Sayılı Kanuna Göre Damga Vergisi",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "4080",
+            "name": "Özel İletişim Vergisi",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "4081",
+            "name": "5035 Sayılı Kanuna Göre Özel İletişim Vergisi",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "9021",
+            "name": "Banka ve Sigorta Muameleleri Vergisi",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "8001",
+            "name": "Borsa Tescil Ücreti",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "8002",
+            "name": "Enerji Fonu",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "4071",
+            "name": "Elektrik Havagaz Tüketim Vergisi",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "8004",
+            "name": "TRT Payı",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "8005",
+            "name": "Elektrik Tüketim Vergisi",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "8006",
+            "name": "TK Kullanım",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "8007",
+            "name": "TK Ruhsat",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "8008",
+            "name": "Çevre Temizlik Vergisi",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0003",
+            "name": "Gelir Vergisi Stopajı",
+            "has_vat": false,
+            "is_stoppage": true,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0011",
+            "name": "Kurumlar Vergisi Stopajı",
+            "has_vat": false,
+            "is_stoppage": true,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "9040",
+            "name": "Mera Fonu",
+            "has_vat": false,
+            "is_stoppage": true,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "4171",
+            "name": "ÖTV 1. Liste Tevkifat",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": true,
+            "default_rate": 100
+        },
+        {
+            "code": "9944",
+            "name": "Belediyelere Ödenen Hal Rüsumu",
+            "has_vat": true,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": null
+        },
+        {
+            "code": "0059",
+            "name": "Konaklama Vergisi",
+            "has_vat": false,
+            "is_stoppage": false,
+            "is_withholding": false,
+            "default_rate": 2
+        },
+        {
+            "code": "SGK_PRIM",
+            "name": "SGK Prim Kesintisi",
+            "has_vat": false,
+            "is_stoppage": true,
+            "is_withholding": false,
+            "default_rate": null
+        }
+    ]
+}
