@@ -1,0 +1,47 @@
+{
+    "customer": {
+        "name": "Müşteri Adı",
+        "address": "Müşteri Adresi",
+        "phone": "Telefon Numarası",
+        "taxOffice": "Vergi Dairesi",
+        "taxNumber": "Vergi Numarası"
+    },
+    "invoice": {
+        "dateOfIssue": "Düzenleme Tarihi",
+        "invoiceNo": "Fatura Numarası",
+        "dispatchNo": "İrsaliye Numarası",
+        "actualDispatchDate": "Fiili Sevk Tarihi",
+        "outgoingAddress": "Sevk Adresi",
+        "maturityDate": "Ödeme Tarihi"
+    },
+    "product": {
+        "name": "Ürün Adı",
+        "description": "Açıklama",
+        "code": "Ürün Kodu",
+        "quantity": "Miktar",
+        "communication": "ÖİV",
+        "unitPrice": "Birim Fiyat",
+        "discount": "İndirim",
+        "exciseDuty": "ÖTV",
+        "vatRate": "KDV",
+        "accomodation": "Konaklama Ver.",
+        "withholdingTaxId": "Tevkifat",
+        "total": "Toplamı"
+    },
+    "totalAmount": {
+        "subTotal": "Ara Toplam",
+        "totalDiscount": "Toplam İndirim",
+        "totalStoppage": "Toplam Stopaj",
+        "totalAccommodationTax": "Konaklama Vergisi Toplamı",
+        "totalVat": "Toplam KDV",
+        "totalExciseDuty": "Toplam ÖTV",
+        "totalCommunicationTax": "Toplam ÖİV",
+        "totalWithholdingTax": "Toplam Tevkifat",
+        "totalAmount": "Genel Toplam",
+        "totalWithText": "Yazı İle Toplam"
+    },
+    "specialNotes": {
+        "orderDate": "Sipariş Tarihi",
+        "orderInfo": "Sipariş Bilgileri"
+    }
+}
