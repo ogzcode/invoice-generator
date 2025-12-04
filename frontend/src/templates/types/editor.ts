@@ -50,4 +50,5 @@ export interface DraggableTableItem extends DraggableItem {
 export type KeyItem = {
     label: string
     value: string
+    type?: 'text' | 'table'
 }

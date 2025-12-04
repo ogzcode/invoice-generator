@@ -5,6 +5,7 @@ import Input from '../../components/Input.vue';
 import Dialog from '../../components/Dialog.vue';
 import Button from '../../components/Button.vue';
 import { File, AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
+import { exportToHtml, exportToJson } from '../composables/useEditorIO.ts';
 
 defineProps<{
     selectedItem: DraggableItem | undefined
@@ -33,8 +34,11 @@ const templateName = ref('test')
                         <Input v-model="templateName" placeholder="Şablon adını girin" />
                     </div>
                     <div class="flex gap-2">
-                        <Button variant="secondary" class="flex-1">
-                            Şablonu Dışa Aktar
+                        <Button variant="secondary" class="flex-1" @click="exportToJson(templateName, draggableItems)">
+                            JSON Dışa Aktar
+                        </Button>
+                        <Button variant="secondary" class="flex-1" @click="exportToHtml(templateName, draggableItems)">
+                            HTML Dışa Aktar
                         </Button>
                     </div>
                 </div>
