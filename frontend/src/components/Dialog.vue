@@ -4,7 +4,6 @@
       ref="reference"
       type="button"
       @click="toggle"
-      :class="buttonClass || 'px-3 py-2 bg-gray-100 rounded-md hover:bg-gray-200'"
     >
       <slot name="button">{{ buttonLabel }}</slot>
     </button>
