@@ -13,7 +13,7 @@
 import { computed, useAttrs } from 'vue'
 
 const props = defineProps({
-	variant: { type: String, default: 'primary' }, // primary | secondary | ghost | outline
+	variant: { type: String, default: 'primary' }, // primary | secondary | ghost | outline | danger
 	size: { type: String, default: 'md' }, // sm | md | lg
 	disabled: { type: Boolean, default: false },
 	rounded: { type: Boolean, default: true },
@@ -30,6 +30,7 @@ const variants: Record<string, string> = {
 	secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200',
 	ghost: 'bg-transparent text-gray-800 hover:bg-gray-100',
 	outline: 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-50',
+    danger: 'bg-red-100 text-red-800 hover:bg-red-200',
 }
 
 const sizes: Record<string, string> = {
