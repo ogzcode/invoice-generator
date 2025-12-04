@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted } from 'vue'
 import { useDraggable } from '../composables/useDraggable'
 import { useResizable } from '../composables/useResizable'
-import { DEFAULT_ITEM_SIZE } from '../constants/editor'
+import { DEFAULT_ITEM_SIZE, IMAGE_ITEM_DEFAULT_SIZE, TABLE_ITEM_DEFAULT_SIZE } from '../constants/editor'
 import type { DraggableItem } from '../types/editor.ts'
 
 const props = defineProps<{
@@ -42,47 +42,35 @@ const handleDragOver = (event: DragEvent) => {
     event.dataTransfer!.dropEffect = 'copy'
 }
 
-const calculateContentHeight = (content: string, width: number): number => {
-    const tempDiv = document.createElement('div')
-    tempDiv.style.width = `${width}px`
-    tempDiv.style.position = 'absolute'
-    tempDiv.style.visibility = 'hidden'
-    tempDiv.style.padding = content.includes('<table') ? '0' : '4px'
-    tempDiv.style.boxSizing = 'border-box'
-    tempDiv.innerHTML = content
-
-    document.body.appendChild(tempDiv)
-    const height = tempDiv.offsetHeight
-    document.body.removeChild(tempDiv)
-
-    return Math.max(height, 20)
-}
-
 const handleDrop = (event: DragEvent) => {
     event.preventDefault()
     const rawData = event.dataTransfer!.getData('text/plain')
 
     let label: string
     let value: string | undefined
+    let type: string | undefined
 
-    try {
-        const dragData = JSON.parse(rawData)
-        // - { label, value }
-        if (typeof dragData === 'object' && dragData !== null) {
-            label = (dragData as any).label
-            value = (dragData as any).value
-        } else {
-            label = String(dragData)
-        }
-    } catch {
-        label = rawData
-    }
+    const dragData = JSON.parse(rawData)
+
+    label = (dragData as any).label
+    value = (dragData as any).value
+    type = (dragData as any).type
 
     const a4Page = event.currentTarget as HTMLElement
     const rect = a4Page.getBoundingClientRect()
 
-    const itemWidth = DEFAULT_ITEM_SIZE.width
-    const itemHeight = calculateContentHeight(label, itemWidth)
+    let itemWidth = 0
+    let itemHeight = 0
+    if (type === 'image') {
+        itemWidth = IMAGE_ITEM_DEFAULT_SIZE.width
+        itemHeight = IMAGE_ITEM_DEFAULT_SIZE.height
+    } else if (type === 'table') {
+        itemWidth = TABLE_ITEM_DEFAULT_SIZE.width
+        itemHeight = TABLE_ITEM_DEFAULT_SIZE.height
+    } else {
+        itemWidth = DEFAULT_ITEM_SIZE.width
+        itemHeight = DEFAULT_ITEM_SIZE.height
+    }
 
     const snappedPosition = snapToGrid(
         event.clientX - rect.left,
@@ -91,12 +79,14 @@ const handleDrop = (event: DragEvent) => {
         itemHeight
     )
 
+    console.log(itemHeight, itemWidth)
+
     const newItems = [...props.draggableItems]
     newItems.push({
         id: crypto.randomUUID(),
         label,
         value: value || '',
-        type: 'text',
+        type: (type as 'text' | 'table' | 'image') || 'text',
         position: snappedPosition,
         size: { width: itemWidth, height: itemHeight },
         fontFamily: 'sans',
