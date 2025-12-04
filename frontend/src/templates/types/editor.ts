@@ -47,3 +47,8 @@ export interface DraggableTableItem extends DraggableItem {
   tableData: ProductTableData;
   headers: string[];
 } 
+
+export type KeyItem = {
+    label: string
+    value: string
+}

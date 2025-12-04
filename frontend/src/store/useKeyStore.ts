@@ -1,15 +1,6 @@
 import { defineStore } from "pinia"
 import { ref } from "vue"
-
-type KeyItem = {
-    label: string
-    value: string
-}
-
-
-type KeyState = {
-    keyList: KeyItem[]
-}
+import type { KeyItem } from "../templates/types/editor"
 
 export const useKeyStore = defineStore("keys", {
     state: () => ({
@@ -22,7 +13,7 @@ export const useKeyStore = defineStore("keys", {
             }
         },
         removeKey(keyToRemove: KeyItem) {
-            this.keyList = this.keyList.filter(key => key !== keyToRemove)
+            this.keyList = this.keyList.filter(key => key.value !== keyToRemove.value)
         }
     }
 })
