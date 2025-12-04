@@ -3,7 +3,9 @@
         <div class=" flex-1 p-2 border border-stone-300 rounded-md bg-white text-sm cursor-move hover:shadow-sm transition-shadow duration-150"
             :draggable="draggable" @dragstart="onDragStart" tabindex="0" :aria-label="`Drag: ${item?.label}`">
             <div class="flex items-center gap-2 text-stone-700">
-                <Key class="w-4 h-4 text-stone-500" />
+                <Table v-if="item.type === 'table'" class="w-5 h-5 text-stone-500" />
+                <Image v-else-if="item.type === 'image'" class="w-5 h-5 text-stone-500" />
+                <Type v-else class="w-5 h-5 text-stone-500" />
                 <p class="flex-1 flex justify-between items-center">
                     <span class="font-medium">{{ item.label }}</span>
                     <span class="text-xs text-pink-500 bg-pink-50 px-2 rounded-md">#{{ item.value }}</span>
@@ -18,7 +20,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
-import { Key, Trash } from 'lucide-vue-next'
+import { Trash, Table, Type, Image } from 'lucide-vue-next'
 import { useKeyStore } from '../store/useKeyStore'
 import Button from './Button.vue'
 
@@ -27,6 +29,7 @@ const { removeKey } = useKeyStore()
 type KeyItem = {
     label: string
     value: string
+    type?: 'text' | 'table' | 'image'
 }
 
 const props = defineProps({
