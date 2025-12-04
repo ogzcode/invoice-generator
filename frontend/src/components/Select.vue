@@ -5,7 +5,7 @@
       :value="modelValue === null ? '' : String(modelValue)"
       @change="onChange"
       :disabled="disabled"
-      class="w-full border border-gray-200 rounded-md p-1 text-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+      class="w-full border border-gray-200 rounded-md p-1 text-sm bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
     >
       <option v-if="placeholder" value="" disabled hidden>{{ placeholder }}</option>
       <option v-for="opt in options" :key="String(opt.value)" :value="String(opt.value)">{{ opt.label }}</option>

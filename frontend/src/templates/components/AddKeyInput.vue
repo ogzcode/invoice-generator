@@ -46,7 +46,7 @@ const keyStore = useKeyStore()
 const keyText = ref('')
 const keyValue = ref('')
 const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
-const keyTypeValue = ref('text')
+const keyTypeValue = ref<'text' | 'image' | 'table'>('text')
 
 const keyType = [
     { label: 'Metin', value: 'text' },
@@ -55,9 +55,7 @@ const keyType = [
 ]
 
 function onAdd() {
-
-    // Use same string for both label and value since only one input was requested
-    keyStore.addKey({ label: keyText.value, value: keyValue.value })
+    keyStore.addKey({ label: keyText.value, value: keyValue.value, type: keyTypeValue.value })
     keyText.value = ''
     keyValue.value = ''
     dialogRef.value?.setOpen(false)
