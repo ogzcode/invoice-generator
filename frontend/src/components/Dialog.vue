@@ -99,6 +99,13 @@ function toggle() {
   open.value = !open.value
 }
 
+function setOpen(value: boolean) {
+  open.value = value
+}
+
+// Expose control functions/refs to parent components (use with `ref` on this component)
+defineExpose({ open, setOpen, toggle, close })
+
 function onDocumentClick(e: MouseEvent) {
   if (!props.closeOnOutside) return
   const target = e.target as Node | null
