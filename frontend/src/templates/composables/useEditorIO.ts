@@ -1,4 +1,3 @@
-import { ref, Ref } from 'vue'
 import type { DraggableItem, ExportData } from '../types/editor.ts'
 
 function addDataKeysToTable(htmlContent: string, headers: string[]) {
@@ -136,7 +135,7 @@ export const exportToHtml = (fileName: string = 'template', draggableItems: Drag
                 text-decoration: ${item.textDecoration || 'none'};
                 line-height: 1.5;
               ">
-                ${item.type === 'table' ? addDataKeysToTable(item.content, item.headers) : item.content}
+                ${item.type === 'table' ? addDataKeysToTable(item.content, item.headers || []) : item.content}
               </div>
             `).join('')}
           </div>
@@ -144,9 +143,9 @@ export const exportToHtml = (fileName: string = 'template', draggableItems: Drag
       </body>
       </html>
     `
-    return htmlContent
+    //return htmlContent
 
-    /* const blob = new Blob([htmlContent], { type: 'text/html' })
+    const blob = new Blob([htmlContent], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
 
     const link = document.createElement('a')
@@ -155,7 +154,7 @@ export const exportToHtml = (fileName: string = 'template', draggableItems: Drag
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-    URL.revokeObjectURL(url) */
+    URL.revokeObjectURL(url)
 }
 
 export const validateImportedData = (data: any): data is ExportData => {
@@ -331,7 +330,8 @@ export const printTemplate = (draggableItems: DraggableItem[]) => {
 export const exportToPdf = async (fileName: string, draggableItems: DraggableItem[]) => {
     try {
         // jsPDF'i dinamik olarak yükle
-        const jsPDF = (await import('jspdf')).default
+        //const jsPDF = (await import('jspdf')).default
+        const jsPDF = {} as any
 
         // PDF oluştur (A4 boyutunda)
         const pdf = new jsPDF('p', 'mm', 'a4')
