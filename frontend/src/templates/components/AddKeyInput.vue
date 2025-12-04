@@ -1,5 +1,5 @@
 <template>
-    <Dialog>
+    <Dialog ref="dialogRef">
         <template #button>
             <Button variant="secondary" size="sm">
                 <Plus class="w-5 h-5 mr-2" />
@@ -15,6 +15,10 @@
             <div class="my-2">
                 <label class="block text-sm font-medium text-stone-700">Anahtar Değeri</label>
                 <Input v-model="keyValue" placeholder="Anahtar değeri girin" />
+            </div>
+            <div class="my-2">
+                <label class="block text-sm font-medium text-stone-700">Anahtar Tipi</label>
+                <Select v-model="keyTypeValue" :options="keyType" />
             </div>
 
         </template>
@@ -36,10 +40,19 @@ import Dialog from '../../components/Dialog.vue'
 import Input from '../../components/Input.vue'
 import Button from '../../components/Button.vue'
 import { Plus } from 'lucide-vue-next'
+import Select from '../../components/Select.vue'
 
 const keyStore = useKeyStore()
 const keyText = ref('')
 const keyValue = ref('')
+const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
+const keyTypeValue = ref('text')
+
+const keyType = [
+    { label: 'Metin', value: 'text' },
+    { label: 'Resim', value: 'image' },
+    { label: 'Veri Tablosu', value: 'table' },
+]
 
 function onAdd() {
 
@@ -47,6 +60,7 @@ function onAdd() {
     keyStore.addKey({ label: keyText.value, value: keyValue.value })
     keyText.value = ''
     keyValue.value = ''
+    dialogRef.value?.setOpen(false)
 }
 
 const btnDisabled = computed(() => {
