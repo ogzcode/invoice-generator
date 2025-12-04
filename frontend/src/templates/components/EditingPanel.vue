@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { DraggableItem } from '../types/editor.ts'
-import { useRouter } from 'vue-router'
 import { exportToJson, exportToHtml, exportToPdf, printTemplate } from '../composables/useEditorIO'
 
-const router = useRouter()
 const props = defineProps<{
     selectedItem: DraggableItem | undefined
     draggableItems: DraggableItem[]
@@ -34,7 +32,7 @@ const handleSaveTemplate = async () => {
 </script>
 
 <template>
-    <div class="p-4 bg-white">
+    <div class="p-4 bg-white min-h-screen overflow-y-auto">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Düzenleme</h2>
 
         <!-- Dosya İşlemleri -->

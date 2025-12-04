@@ -10,9 +10,9 @@ export interface Size {
 
 export interface DraggableItem {
   id: string
-  content: string
-  type: string
-  key?: string
+  label: string
+  value: string
+  type: 'text' | 'table'
   position: {
     x: number
     y: number
@@ -28,7 +28,6 @@ export interface DraggableItem {
   fontWeight: 'normal' | 'bold'
   fontStyle: 'normal' | 'italic'
   textDecoration: 'none' | 'underline'
-  headers?: string[]
 }
 
 export interface ExportData {
