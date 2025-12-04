@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useDraggable } from '../composables/useDraggable'
 import { useResizable } from '../composables/useResizable'
 import { DEFAULT_ITEM_SIZE } from '../constants/editor'
 import type { DraggableItem } from '../types/editor.ts'
-
-interface DragData {
-    text: string
-    key: string
-}
 
 const props = defineProps<{
     draggableItems: DraggableItem[]
@@ -67,22 +62,27 @@ const handleDrop = (event: DragEvent) => {
     event.preventDefault()
     const rawData = event.dataTransfer!.getData('text/plain')
 
-    let content: string
-    let key: string | undefined
+    let label: string
+    let value: string | undefined
 
     try {
-        const dragData: DragData = JSON.parse(rawData)
-        content = dragData.text
-        key = dragData.key
+        const dragData = JSON.parse(rawData)
+        // - { label, value }
+        if (typeof dragData === 'object' && dragData !== null) {
+            label = (dragData as any).label
+            value = (dragData as any).value
+        } else {
+            label = String(dragData)
+        }
     } catch {
-        content = rawData
+        label = rawData
     }
 
     const a4Page = event.currentTarget as HTMLElement
     const rect = a4Page.getBoundingClientRect()
 
-    const itemWidth = content.includes('<table') ? 600 : DEFAULT_ITEM_SIZE.width
-    const itemHeight = calculateContentHeight(content, itemWidth)
+    const itemWidth = DEFAULT_ITEM_SIZE.width
+    const itemHeight = calculateContentHeight(label, itemWidth)
 
     const snappedPosition = snapToGrid(
         event.clientX - rect.left,
@@ -94,9 +94,9 @@ const handleDrop = (event: DragEvent) => {
     const newItems = [...props.draggableItems]
     newItems.push({
         id: crypto.randomUUID(),
-        content,
-        key,
-        type: content.includes('<table') ? 'table' : 'text',
+        label,
+        value: value || '',
+        type: 'text',
         position: snappedPosition,
         size: { width: itemWidth, height: itemHeight },
         fontFamily: 'sans',
@@ -105,7 +105,6 @@ const handleDrop = (event: DragEvent) => {
         fontWeight: 'normal',
         fontStyle: 'normal',
         textDecoration: 'none',
-        headers: content.includes('<table') ? ['name', 'quantity', 'unitPrice', 'vatRate'] : []
     })
     emit('update:draggableItems', newItems)
 }
@@ -135,10 +134,6 @@ const getItemStyles = (item: DraggableItem) => {
         borderStyle: 'solid',
         borderColor: '#9ca3af',
         backgroundColor: '#ffffff'
-    }
-
-    if (item.content.includes('<table')) {
-        styles.padding = '0'
     }
 
     return styles
@@ -231,12 +226,7 @@ onUnmounted(() => {
                     justifyContent: item.textAlign === 'left' ? 'flex-start' :
                         item.textAlign === 'right' ? 'flex-end' : 'center'
                 }">
-                    <template v-if="item.type === 'table'">
-                        <div v-html="item.content"></div>
-                    </template>
-                    <template v-else>
-                        {{ item.content }}
-                    </template>
+                    {{ item.value }}
                 </div>
             </div>
         </div>
