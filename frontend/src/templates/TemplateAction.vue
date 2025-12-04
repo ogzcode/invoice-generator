@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
+// @ts-ignore
 import { useRouter } from 'vue-router'
 import SidebarTools from './components/SidebarTools.vue'
 import EditingPanel from './components/EditingPanel.vue'
 import MainEditor from './components/MainEditor.vue'
 
-const router = useRouter()
 const isLoading = ref(true)
-
-const checkScreenSize = () => {
-  if (window.innerWidth < 1024) {
-    router.push('/templates')
-  }
-}
 
 import { useDraggable } from './composables/useDraggable'
 import { useResizable } from './composables/useResizable'
@@ -20,14 +14,6 @@ import { DEFAULT_ITEM_SIZE } from './constants/editor'
 import type { DraggableItem } from './types/editor'
 // @ts-ignore
 import toolData from './data/tool.json'
-import { useGlobalData } from '@/store/globalData'
-import { useToast } from 'primevue/usetoast'
-
-const toast = useToast()
-const { selectedData } = useGlobalData()
-
-// Template önbellek mekanizması
-const templateCache = new Map()
 
 interface SelectedProduct {
   key: string
@@ -44,7 +30,6 @@ const baseSelectedData = [
 
 const draggableItems = ref<DraggableItem[]>([])
 const selectedItemId = ref<string | null>(null)
-const templateName = ref('')
 const selectedProducts = ref<SelectedProduct[]>(baseSelectedData)
 const isResizing = ref(false)
 
@@ -58,43 +43,6 @@ const RULER_VALUES = Array.from(
   { length: Math.floor(794 / GRID_SIZE) + 1 },
   (_, i) => i * GRID_SIZE
 )
-
-// Template içeriğini önbellekten alma
-const getTemplateContent = (templateId: string) => {
-  if (templateCache.has(templateId)) {
-    return templateCache.get(templateId)
-  }
-  const content = JSON.parse(selectedData?.templateJson || '{}')
-  templateCache.set(templateId, content)
-  return content
-}
-
-// JSON yükleme fonksiyonu optimizasyonu
-const handleImportJson = async (file: File) => {
-  try {
-    const fileContent = await file.text()
-    const jsonData = JSON.parse(fileContent)
-
-    if (!jsonData.pageItems) {
-      throw new Error('Geçersiz JSON formatı')
-    }
-
-    draggableItems.value = jsonData.pageItems
-    selectedItemId.value = null
-
-    const tableItem = draggableItems.value.find(item => item.type === 'table')
-    const productData = toolData.product
-    selectedProducts.value = tableItem?.headers.map(header => ({
-      key: header,
-      label: productData[header as keyof typeof productData],
-      selected: true
-    })) || baseSelectedData
-
-  } catch (error) {
-    console.error('JSON yükleme hatası:', error)
-    toast.add({ severity: 'error', summary: 'Hata', detail: 'JSON dosyası yüklenirken bir hata oluştu.', life: 5000 })
-  }
-}
 
 const selectedItem = computed(() => {
   return draggableItems.value.find(item => item.id === selectedItemId.value)
@@ -162,38 +110,8 @@ const handleChangeTableData = (tableData: string) => {
   )
 }
 
-// Veri yükleme optimizasyonu
-const loadTemplateData = () => {
-  if (!selectedData?.id) return
-
-  try {
-    const content = getTemplateContent(selectedData.id)
-    draggableItems.value = content.pageItems
-    templateName.value = selectedData.templateName
-    selectedItemId.value = null
-
-    const tableItem = draggableItems.value.find(item => item.type === 'table')
-    const productData = toolData.product
-    selectedProducts.value = tableItem?.headers.map(header => ({
-      key: header,
-      label: productData[header as keyof typeof productData],
-      selected: true
-    })) || baseSelectedData
-
-  } catch (error) {
-    toast.add({ 
-      severity: 'error', 
-      summary: 'Hata', 
-      detail: error?.response?.data?.message || error?.response?.data?.Message || 'Şablon yüklenirken bir hata oluştu', 
-      life: 5000 
-    })
-  }
-}
-
 onMounted(() => {
-  checkScreenSize()
-  window.addEventListener('resize', checkScreenSize)
-  loadTemplateData()
+  //window.addEventListener('resize', checkScreenSize)
   window.addEventListener('mousemove', handleMouseMove)
   window.addEventListener('mouseup', handleMouseUp)
   
@@ -204,7 +122,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', checkScreenSize)
+  //window.removeEventListener('resize', checkScreenSize)
   window.removeEventListener('mousemove', handleMouseMove)
   window.removeEventListener('mouseup', handleMouseUp)
 })

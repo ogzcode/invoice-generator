@@ -2,21 +2,16 @@
 import { ref } from 'vue';
 import type { DraggableItem } from '../types/editor.ts'
 import { useRouter } from 'vue-router'
-import { createTemplate, updateTemplate } from '@/service/request/user/templateReq'
-import { useToast } from 'primevue/usetoast';
 import { exportToJson, exportToHtml, exportToPdf, printTemplate } from '../composables/useEditorIO'
-import { useGlobalData } from '@/store/globalData.js';
 
-const { selectedData } = useGlobalData()
-const toast = useToast();
 const router = useRouter()
 const props = defineProps<{
     selectedItem: DraggableItem | undefined
     draggableItems: DraggableItem[]
 }>()
 
-const templateName = ref(selectedData ? selectedData.templateName : '')
-const electronicType = ref(selectedData ? selectedData.electronicType : "5");
+const templateName = ref('test')
+const electronicType = ref("5");
 
 const handleSaveTemplate = async () => {
     try {
@@ -29,36 +24,16 @@ const handleSaveTemplate = async () => {
         const jsonString = JSON.stringify(exportData, null, 2)
         const htmlString = exportToHtml(templateName.value, exportData.pageItems)
 
-        if (selectedData?.id) {
-          await updateTemplate({
-            id: selectedData.id,
-            templateName: templateName.value,
-            templateContent: htmlString,
-            templateJson: jsonString,
-            formatType: 2,
-            electronicType: Number(electronicType.value), //fatura, teklif, irsaliye
-            
-          })
-        } else {
-          await createTemplate({
-            templateName: templateName.value,
-            templateContent: htmlString,
-            templateJson: jsonString,
-            electronicType: Number(electronicType.value), //fatura, teklif, irsaliye
-            formatType: 2,
-          })
-        }
-        toast.add({ severity: 'success', summary: 'Başarılı', detail: 'Şablon başarıyla kaydedildi.', life: 5000 });
-        router.push('/templates')
+        console.log('Şablon JSON:', jsonString)
+        console.log('Şablon HTML:', htmlString)
+
     } catch (error) {
         console.error('Şablon kaydedilirken hata oluştu:', error)
-        toast.add({ severity: 'error', summary: 'Hata', detail: error?.response?.data?.message || error?.response?.data?.Message, life: 5000 });
     }
 }
 </script>
 
 <template>
-    <Toast />
     <div class="p-4 bg-white">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Düzenleme</h2>
 
@@ -90,9 +65,9 @@ const handleSaveTemplate = async () => {
                                 d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
                                 clip-rule="evenodd" />
                         </svg>
-                        {{ selectedData ? 'Şablonu Güncelle' : 'Şablonu Kaydet' }}
+                        Şablonu Kaydet
                     </button>
-                    <!-- <button @click="exportToJson('test', draggableItems)"
+                    <button @click="exportToJson('test', draggableItems)"
                         class="w-full px-3 py-2 text-sm bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed text-blue-600 rounded-md hover:bg-blue-100 transition-colors flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
@@ -129,7 +104,7 @@ const handleSaveTemplate = async () => {
                         </svg>
                         Şablonu PDF'e Dönüştür
                     </button>
-                         -->
+                        
                 </div>
             </div>
         </div>
