@@ -12,6 +12,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "@vueuse/core": "^14.1.0",
     "@vueuse/integrations": "^14.1.0",
+    "pinia": "^3.0.4",
     "sortablejs": "^1.15.6",
     "tailwindcss": "^4.1.17",
     "vue": "^3.5.21",
