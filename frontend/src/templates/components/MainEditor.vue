@@ -4,6 +4,7 @@ import { useDraggable } from '../composables/useDraggable'
 import { useResizable } from '../composables/useResizable'
 import { DEFAULT_ITEM_SIZE, IMAGE_ITEM_DEFAULT_SIZE, TABLE_ITEM_DEFAULT_SIZE } from '../constants/editor'
 import type { DraggableItem } from '../types/editor.ts'
+import TableItem from '../../components/TableItem.vue'
 
 const props = defineProps<{
     draggableItems: DraggableItem[]
@@ -95,6 +96,7 @@ const handleDrop = (event: DragEvent) => {
         fontWeight: 'normal',
         fontStyle: 'normal',
         textDecoration: 'none',
+        dataColumns: type === 'table' ? [] : undefined
     })
     emit('update:draggableItems', newItems)
 }
@@ -121,7 +123,7 @@ const getItemStyles = (item: DraggableItem) => {
         zIndex: (currentDragItem?.value?.id === item.id || currentResizeItem?.value?.id === item.id) ? 10 : 1,
         padding: '0.25rem',
         borderWidth: '1px',
-        borderStyle: 'solid',
+        borderStyle: 'dashed',
         borderColor: '#9ca3af',
         backgroundColor: '#ffffff'
     }
@@ -216,7 +218,14 @@ onUnmounted(() => {
                     justifyContent: item.textAlign === 'left' ? 'flex-start' :
                         item.textAlign === 'right' ? 'flex-end' : 'center'
                 }">
-                    {{ item.value }}
+                    <template v-if="item.type === 'table'">
+                        <TableItem :columns="item.dataColumns" :align="item.textAlign" />
+                    </template>
+                    <template v-else>
+                        <p>
+                            {{ item.value }}
+                        </p>
+                    </template>
                 </div>
             </div>
         </div>
@@ -283,19 +292,5 @@ onUnmounted(() => {
 
 .cursor-se-resize {
     cursor: se-resize;
-}
-
-.draggable-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-.draggable-table td {
-    border: 1px solid #d1d5db;
-    padding: 8px 16px;
-}
-
-.draggable-table tr:hover {
-    background-color: #f9fafb;
 }
 </style>
