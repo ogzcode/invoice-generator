@@ -5,6 +5,7 @@
             <div class="flex items-center gap-2 text-stone-700">
                 <Table v-if="item.type === 'table'" class="w-5 h-5 text-stone-500" />
                 <Image v-else-if="item.type === 'image'" class="w-5 h-5 text-stone-500" />
+                <Database v-else-if="item.type === 'data'" class="w-5 h-5 text-stone-500" />
                 <Type v-else class="w-5 h-5 text-stone-500" />
                 <p class="flex-1 flex justify-between items-center">
                     <span class="font-medium">{{ item.label }}</span>
@@ -20,7 +21,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
-import { Trash, Table, Type, Image } from 'lucide-vue-next'
+import { Trash, Table, Type, Image, Database } from 'lucide-vue-next'
 import { useKeyStore } from '../store/useKeyStore'
 import Button from './Button.vue'
 
@@ -29,7 +30,7 @@ const { removeKey } = useKeyStore()
 type KeyItem = {
     label: string
     value: string
-    type?: 'text' | 'table' | 'image'
+    type?: 'text' | 'table' | 'image' | 'data'
 }
 
 const props = defineProps({
