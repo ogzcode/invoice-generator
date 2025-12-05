@@ -83,10 +83,11 @@ function close() {
 function sizeClassFor(size: string) {
   switch (size) {
     case 'small':
-      return 'w-80'
+      return 'w-xl'
     case 'large':
       return 'max-w-3xl w-full'
     case 'medium':
+      return 'w-2xl'
     default:
       return 'w-96'
   }
