@@ -8,6 +8,13 @@ export interface Size {
   height: number
 }
 
+export type DataColumn = {
+  label: string
+  value: string
+  width: number
+  textAlign: 'left' | 'center' | 'right'
+}
+
 export interface DraggableItem {
   id: string
   label: string
@@ -27,7 +34,8 @@ export interface DraggableItem {
   textAlign: 'left' | 'center' | 'right'
   fontWeight: 'normal' | 'bold'
   fontStyle: 'normal' | 'italic'
-  textDecoration: 'none' | 'underline'
+  textDecoration: 'none' | 'underline',
+  dataColumns?: DataColumn[]
 }
 
 export interface ExportData {
