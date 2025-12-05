@@ -32,7 +32,7 @@ function renderItemDiv(item: DraggableItem) {
     ` : (item.type === 'table' ? '' : escapeHtml(item.value))
 
     return `
-      <div class="item" data-key="${escapeHtml(item.value)}" style="
+      <div class="item" data-type="${escapeHtml(item.type)}" data-key="${escapeHtml(item.value)}" style="
         position: absolute;
         left: ${escapeHtml(item.position.x)}px;
         top: ${escapeHtml(item.position.y)}px;
