@@ -1,5 +1,5 @@
 <template>
-    <Dialog ref="dialogRef">
+    <Dialog ref="dialogRef" size="small">
         <template #button>
             <Button variant="secondary" size="sm">
                 <Plus class="w-5 h-5 mr-2" />
