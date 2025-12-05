@@ -1,5 +1,57 @@
 import type { DraggableItem, ExportData } from '../types/editor.ts'
 
+function escapeHtml(str: any) {
+    if (str === null || str === undefined) return ''
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+}
+
+function renderTableHtmlForItem(item: DraggableItem) {
+    const cols = (item.dataColumns || [])
+    const thead = `<tr>${cols.map(c => `<th data-key="${escapeHtml(c.value)}" style="border:1px solid #d1d5db;padding:8px;text-align:${escapeHtml(c.textAlign)};width:${c.width ? escapeHtml(c.width + 'px') : 'auto'}">${escapeHtml(c.label)}</th>`).join('')}</tr>`
+    const tbody = `<tr>${cols.map(c => `<td style="border:1px solid #d1d5db;padding:8px;text-align:${escapeHtml(c.textAlign)}"></td>`).join('')}</tr>`
+    return `<table style="border-collapse:collapse;width:100%;min-width:100%">${thead}<tbody>${tbody}</tbody></table>`
+}
+
+function renderItemDiv(item: DraggableItem) {
+    // Render different inner content depending on item type
+    const inner = (item.type === 'image') ? `
+      <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <div style="width:100%;height:100%;background:#f1f5f9;border:1px dashed #d1d5db;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <rect x="3" y="3" width="18" height="14" rx="1.5" stroke="#6b7280" stroke-width="1.2" fill="none" />
+            <circle cx="8" cy="8" r="1.5" fill="#6b7280" />
+            <path d="M3 17l5-6 4 5 3-4 6 6" stroke="#6b7280" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    ` : (item.type === 'table' ? '' : escapeHtml(item.label))
+
+    return `
+      <div class="item" data-key="${escapeHtml(item.value)}" style="
+        position: absolute;
+        left: ${escapeHtml(item.position.x)}px;
+        top: ${escapeHtml(item.position.y)}px;
+        width: ${escapeHtml(item.size.width)}px;
+        height: ${escapeHtml(item.size.height)}px;
+        font-family: ${escapeHtml(item.fontFamily || 'sans-serif')};
+        font-size: ${escapeHtml(item.fontSize)}px;
+        color: ${escapeHtml(item.color || '#000')};
+        text-align: ${escapeHtml(item.textAlign || 'left')};
+        font-weight: ${escapeHtml(item.fontWeight || 'normal')};
+        font-style: ${escapeHtml(item.fontStyle || 'normal')};
+        text-decoration: ${escapeHtml(item.textDecoration || 'none')};
+        line-height: 1.5;
+      ">
+        ${inner}
+      </div>
+    `
+}
+
 export const exportToJson = (fileName: string, draggableItems: DraggableItem[]) => {
     const exportData: ExportData = {
         pageItems: draggableItems,
@@ -101,25 +153,7 @@ export const exportToHtml = (fileName: string = 'template', draggableItems: Drag
       <body>
         <div class="preview-container">
           <div class="page">
-            ${draggableItems.map(item => `
-              <div class="item" data-key="${item.value}" style="
-                position: absolute;
-                left: ${item.position.x}px;
-                top: ${item.position.y}px;
-                width: ${item.size.width}px;
-                min-height: ${item.size.height}px;
-                font-family: ${item.fontFamily || 'sans-serif'};
-                font-size: ${item.fontSize}px;
-                color: ${item.color || '#000'};
-                text-align: ${item.textAlign || 'left'};
-                font-weight: ${item.fontWeight || 'normal'};
-                font-style: ${item.fontStyle || 'normal'};
-                text-decoration: ${item.textDecoration || 'none'};
-                line-height: 1.5;
-              ">
-                ${item.label}
-              </div>
-            `).join('')}
+            ${draggableItems.map(item => item.type === 'table' ? renderItemDiv(item).replace('</div>', `${renderTableHtmlForItem(item)}</div>`) : renderItemDiv(item)).join('')}
           </div>
         </div>
       </body>
@@ -224,25 +258,7 @@ export const printTemplate = (draggableItems: DraggableItem[]) => {
         </head>
         <body>
             <div class="print-container">
-                ${draggableItems.map(item => `
-                    <div class="item" data-key="${item.value}" style="
-                        position: absolute;
-                        left: ${item.position.x}px;
-                        top: ${item.position.y}px;
-                        width: ${item.size.width}px;
-                        min-height: ${item.size.height}px;
-                        font-family: ${item.fontFamily || 'Arial, sans-serif'};
-                        font-size: ${item.fontSize}px;
-                        color: ${item.color || '#000'};
-                        text-align: ${item.textAlign || 'left'};
-                        font-weight: ${item.fontWeight || 'normal'};
-                        font-style: ${item.fontStyle || 'normal'};
-                        text-decoration: ${item.textDecoration || 'none'};
-                        line-height: 1.5;
-                    ">
-                        ${item.label}
-                    </div>
-                `).join('')}
+                ${draggableItems.map(item => item.type === 'table' ? renderItemDiv(item).replace('</div>', `${renderTableHtmlForItem(item)}</div>`) : renderItemDiv(item)).join('')}
             </div>
         </body>
         </html>
