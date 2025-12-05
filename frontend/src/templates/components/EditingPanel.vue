@@ -6,6 +6,7 @@ import Dialog from '../../components/Dialog.vue';
 import Button from '../../components/Button.vue';
 import { File, AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
 import { exportToHtml, exportToJson } from '../composables/useEditorIO.ts';
+import TableEditor from './TableEditor.vue';
 
 defineProps<{
     selectedItem: DraggableItem | undefined
@@ -140,7 +141,7 @@ const templateName = ref('test')
             </div>
 
             <!-- Hizalama Ayarları -->
-            <div class="bg-white rounded-lg p-2 shadow-sm border border-gray-200">
+            <div class="bg-white rounded-lg p-2 shadow-sm border border-gray-200" v-if="selectedItem.type !== 'table' && selectedItem.type !== 'image'">
                 <h3 class="text-sm font-medium text-gray-700 mb-3">Hizalama</h3>
                 <div class="flex gap-2">
                     <button v-for="align in ['left', 'center', 'right']" :key="align"
@@ -157,6 +158,7 @@ const templateName = ref('test')
                     </button>
                 </div>
             </div>
+            <TableEditor v-if="selectedItem.type === 'table'" v-model="selectedItem.dataColumns" />
         </div>
     </div>
 </template>
