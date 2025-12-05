@@ -29,7 +29,7 @@ function renderItemDiv(item: DraggableItem) {
           </svg>
         </div>
       </div>
-    ` : (item.type === 'table' ? '' : escapeHtml(item.label))
+    ` : (item.type === 'table' ? '' : escapeHtml(item.value))
 
     return `
       <div class="item" data-key="${escapeHtml(item.value)}" style="

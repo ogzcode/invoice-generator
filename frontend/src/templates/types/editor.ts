@@ -19,7 +19,7 @@ export interface DraggableItem {
   id: string
   label: string
   value: string
-  type: 'text' | 'table' | 'image'
+  type: 'text' | 'table' | 'image' | 'data'
   position: {
     x: number
     y: number
@@ -58,5 +58,5 @@ export interface DraggableTableItem extends DraggableItem {
 export type KeyItem = {
     label: string
     value: string
-    type?: 'text' | 'table' | 'image'
+    type?: 'text' | 'table' | 'image' | 'data'
 }
