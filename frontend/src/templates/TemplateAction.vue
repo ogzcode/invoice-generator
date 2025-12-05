@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 // @ts-ignore
 import SidebarTools from './components/SidebarTools.vue'
 import EditingPanel from './components/EditingPanel.vue'
 import MainEditor from './components/MainEditor.vue'
 import type { DraggableItem } from './types/editor'
+import { useKeyStore } from '../store/useKeyStore'
 
 const isLoading = ref(true)
 const draggableItems = ref<DraggableItem[]>([])
 const selectedItemId = ref<string | null>(null)
+
+const keyStore = useKeyStore()
+const keyList = computed(() => keyStore.keyList)
 //const { exportToJson } = useEditorIO(draggableItems)
 
 // Ruler değerlerini statik olarak hesaplama
@@ -29,14 +33,42 @@ onMounted(() => {
     isLoading.value = false
   }, 50)
 })
+
+watch(
+  keyList,
+  (v) => {
+    const list = Array.isArray(v) ? v : Array.isArray((v as any)?.value) ? (v as any).value : []
+    const values = new Set(list.map((k: any) => k.value))
+
+    draggableItems.value = draggableItems.value.filter((item) => {
+      if (!item.value) return true
+      return values.has(item.value)
+    })
+
+    if (selectedItemId.value) {
+      const selected = draggableItems.value.find(i => i.id === selectedItemId.value)
+      if (!selected) {
+        selectedItemId.value = null
+      } else {
+        if (!selected.value || !values.has(selected.value)) {
+          selectedItemId.value = null
+        }
+      }
+    }
+  },
+  { deep: true }
+)
 </script>
 
 <template>
   <!-- Loading Overlay -->
   <Transition name="fade">
-    <div v-if="isLoading" class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80 backdrop-blur-sm">
+    <div v-if="isLoading"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80 backdrop-blur-sm">
       <div class="text-center">
-        <div class="inline-block w-16 h-16 border-4 border-t-primary border-primary border-opacity-20 rounded-full animate-spin"></div>
+        <div
+          class="inline-block w-16 h-16 border-4 border-t-primary border-primary border-opacity-20 rounded-full animate-spin">
+        </div>
         <p class="mt-4 text-lg font-medium text-gray-700">Yükleniyor...</p>
       </div>
     </div>
@@ -97,7 +129,7 @@ onMounted(() => {
 
 /* Grid arka planı */
 .grid-bg {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   background-size: 10px 10px;
@@ -108,7 +140,7 @@ onMounted(() => {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
@@ -124,9 +156,17 @@ onMounted(() => {
 }
 
 /* Yön tutamaçları */
-.cursor-e-resize { cursor: e-resize; }
-.cursor-s-resize { cursor: s-resize; }
-.cursor-se-resize { cursor: se-resize; }
+.cursor-e-resize {
+  cursor: e-resize;
+}
+
+.cursor-s-resize {
+  cursor: s-resize;
+}
+
+.cursor-se-resize {
+  cursor: se-resize;
+}
 
 /* Cetvel */
 .sticky {
