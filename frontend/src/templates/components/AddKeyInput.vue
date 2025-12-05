@@ -46,12 +46,13 @@ const keyStore = useKeyStore()
 const keyText = ref('')
 const keyValue = ref('')
 const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
-const keyTypeValue = ref<'text' | 'image' | 'table'>('text')
+const keyTypeValue = ref<'text' | 'image' | 'table' | 'data'>('text')
 
 const keyType = [
     { label: 'Metin', value: 'text' },
     { label: 'Resim', value: 'image' },
     { label: 'Veri Tablosu', value: 'table' },
+    { label: 'Veri', value: 'data' },
 ]
 
 function onAdd() {
