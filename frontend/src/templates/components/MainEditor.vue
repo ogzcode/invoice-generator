@@ -221,6 +221,17 @@ onUnmounted(() => {
                     <template v-if="item.type === 'table'">
                         <TableItem :columns="item.dataColumns" :align="item.textAlign" />
                     </template>
+                    <template v-else-if="item.type === 'image'">
+                        <div class="image-placeholder flex items-center justify-center text-gray-500">
+                            <div class="image-box flex items-center justify-center">
+                                <svg width="20" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                                    <rect x="3" y="3" width="18" height="14" rx="1.5" stroke="#6b7280" stroke-width="1.2" fill="none" />
+                                    <circle cx="8" cy="8" r="1.5" fill="#6b7280" />
+                                    <path d="M3 17l5-6 4 5 3-4 6 6" stroke="#6b7280" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </template>
                     <template v-else>
                         <p>
                             {{ item.value }}
@@ -292,5 +303,21 @@ onUnmounted(() => {
 
 .cursor-se-resize {
     cursor: se-resize;
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+}
+
+.image-box {
+    width: 100%;
+    height: 100%;
+    background: #f1f5f9;
+    border: 1px dashed #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
 }
 </style>
