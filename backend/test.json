@@ -1,0 +1,192 @@
+{
+  "pageItems": [
+    {
+      "id": "70bf397f-bd66-4f62-ba1c-ff20f9ce603d",
+      "label": "Fatura Adı",
+      "value": "Fatura Adı",
+      "type": "text",
+      "position": {
+        "x": 10,
+        "y": 10
+      },
+      "size": {
+        "width": 120,
+        "height": 32
+      },
+      "fontFamily": "sans",
+      "fontSize": 14,
+      "textAlign": "left",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textDecoration": "none"
+    },
+    {
+      "id": "de38d665-6467-45e6-88fa-bf2fa145c8e4",
+      "label": "invoiceName",
+      "value": "invoiceName",
+      "type": "data",
+      "position": {
+        "x": 140,
+        "y": 10
+      },
+      "size": {
+        "width": 120,
+        "height": 32
+      },
+      "fontFamily": "sans",
+      "fontSize": 14,
+      "textAlign": "left",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textDecoration": "none"
+    },
+    {
+      "id": "075f477d-5025-49c2-9f37-724ae17ec79f",
+      "label": "Resim",
+      "value": "image",
+      "type": "image",
+      "position": {
+        "x": 680,
+        "y": 10
+      },
+      "size": {
+        "width": 100,
+        "height": 100
+      },
+      "fontFamily": "sans",
+      "fontSize": 14,
+      "textAlign": "left",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textDecoration": "none"
+    },
+    {
+      "id": "6000a418-11cc-4bb6-828d-cc8597a621ae",
+      "label": "Tablo",
+      "value": "table",
+      "type": "table",
+      "position": {
+        "x": 10,
+        "y": 150
+      },
+      "size": {
+        "width": 768,
+        "height": 150
+      },
+      "fontFamily": "sans",
+      "fontSize": 14,
+      "textAlign": "left",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textDecoration": "none",
+      "dataColumns": [
+        {
+          "label": "Birim Fiyat",
+          "value": "unitPrice",
+          "width": 120,
+          "textAlign": "left"
+        },
+        {
+          "label": "Ürün Adı",
+          "value": "productName",
+          "width": 120,
+          "textAlign": "left"
+        },
+        {
+          "label": "KDV",
+          "value": "vatRate",
+          "width": 120,
+          "textAlign": "left"
+        },
+        {
+          "label": "Toplam",
+          "value": "totalAmount",
+          "width": 120,
+          "textAlign": "left"
+        }
+      ]
+    },
+    {
+      "id": "592bde27-a1c0-47bd-a948-26435935b9fe",
+      "label": "Toplam Vergi",
+      "value": "totalVat",
+      "type": "data",
+      "position": {
+        "x": 580,
+        "y": 340
+      },
+      "size": {
+        "width": 200,
+        "height": 32
+      },
+      "fontFamily": "sans",
+      "fontSize": 14,
+      "textAlign": "left",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textDecoration": "none"
+    },
+    {
+      "id": "7c047c17-3a31-48cf-be1f-97fc106efbdc",
+      "label": "Toplam Vergi",
+      "value": "Toplam Vergi",
+      "type": "text",
+      "position": {
+        "x": 450,
+        "y": 340
+      },
+      "size": {
+        "width": 120,
+        "height": 32
+      },
+      "fontFamily": "sans",
+      "fontSize": 14,
+      "textAlign": "left",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textDecoration": "none"
+    },
+    {
+      "id": "46a8098e-fac1-4f0a-aea9-d9dff9a331b6",
+      "label": "Toplam",
+      "value": "Toplam",
+      "type": "text",
+      "position": {
+        "x": 450,
+        "y": 380
+      },
+      "size": {
+        "width": 120,
+        "height": 32
+      },
+      "fontFamily": "sans",
+      "fontSize": 14,
+      "textAlign": "left",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textDecoration": "none"
+    },
+    {
+      "id": "c4e81a03-61bc-4ebf-9345-5d17db0825bc",
+      "label": "Toplam",
+      "value": "total",
+      "type": "data",
+      "position": {
+        "x": 580,
+        "y": 380
+      },
+      "size": {
+        "width": 200,
+        "height": 32
+      },
+      "fontFamily": "sans",
+      "fontSize": 14,
+      "textAlign": "left",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textDecoration": "none"
+    }
+  ],
+  "exportDate": "2025-12-12T08:45:22.756Z",
+  "pageSize": "A4"
+}
