@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useDraggable } from '../composables/useDraggable'
 import { useResizable } from '../composables/useResizable'
-import { DEFAULT_ITEM_SIZE } from '../constants/editor'
+import { DEFAULT_ITEM_SIZE, IMAGE_ITEM_DEFAULT_SIZE, TABLE_ITEM_DEFAULT_SIZE } from '../constants/editor'
 import type { DraggableItem } from '../types/editor.ts'
-
-interface DragData {
-    text: string
-    key: string
-}
+import TableItem from '../../components/TableItem.vue'
 
 const props = defineProps<{
     draggableItems: DraggableItem[]
@@ -47,42 +43,35 @@ const handleDragOver = (event: DragEvent) => {
     event.dataTransfer!.dropEffect = 'copy'
 }
 
-const calculateContentHeight = (content: string, width: number): number => {
-    const tempDiv = document.createElement('div')
-    tempDiv.style.width = `${width}px`
-    tempDiv.style.position = 'absolute'
-    tempDiv.style.visibility = 'hidden'
-    tempDiv.style.padding = content.includes('<table') ? '0' : '4px'
-    tempDiv.style.boxSizing = 'border-box'
-    tempDiv.innerHTML = content
-
-    document.body.appendChild(tempDiv)
-    const height = tempDiv.offsetHeight
-    document.body.removeChild(tempDiv)
-
-    return Math.max(height, 20)
-}
-
 const handleDrop = (event: DragEvent) => {
     event.preventDefault()
     const rawData = event.dataTransfer!.getData('text/plain')
 
-    let content: string
-    let key: string | undefined
+    let label: string
+    let value: string | undefined
+    let type: string | undefined
 
-    try {
-        const dragData: DragData = JSON.parse(rawData)
-        content = dragData.text
-        key = dragData.key
-    } catch {
-        content = rawData
-    }
+    const dragData = JSON.parse(rawData)
+
+    label = (dragData as any).label
+    value = (dragData as any).value
+    type = (dragData as any).type
 
     const a4Page = event.currentTarget as HTMLElement
     const rect = a4Page.getBoundingClientRect()
 
-    const itemWidth = content.includes('<table') ? 600 : DEFAULT_ITEM_SIZE.width
-    const itemHeight = calculateContentHeight(content, itemWidth)
+    let itemWidth = 0
+    let itemHeight = 0
+    if (type === 'image') {
+        itemWidth = IMAGE_ITEM_DEFAULT_SIZE.width
+        itemHeight = IMAGE_ITEM_DEFAULT_SIZE.height
+    } else if (type === 'table') {
+        itemWidth = TABLE_ITEM_DEFAULT_SIZE.width
+        itemHeight = TABLE_ITEM_DEFAULT_SIZE.height
+    } else {
+        itemWidth = DEFAULT_ITEM_SIZE.width
+        itemHeight = DEFAULT_ITEM_SIZE.height
+    }
 
     const snappedPosition = snapToGrid(
         event.clientX - rect.left,
@@ -91,12 +80,14 @@ const handleDrop = (event: DragEvent) => {
         itemHeight
     )
 
+    console.log(itemHeight, itemWidth)
+
     const newItems = [...props.draggableItems]
     newItems.push({
         id: crypto.randomUUID(),
-        content,
-        key,
-        type: content.includes('<table') ? 'table' : 'text',
+        label,
+        value: value || '',
+        type: (type as 'text' | 'table' | 'image') || 'text',
         position: snappedPosition,
         size: { width: itemWidth, height: itemHeight },
         fontFamily: 'sans',
@@ -105,7 +96,7 @@ const handleDrop = (event: DragEvent) => {
         fontWeight: 'normal',
         fontStyle: 'normal',
         textDecoration: 'none',
-        headers: content.includes('<table') ? ['name', 'quantity', 'unitPrice', 'vatRate'] : []
+        dataColumns: type === 'table' ? [] : undefined
     })
     emit('update:draggableItems', newItems)
 }
@@ -132,13 +123,9 @@ const getItemStyles = (item: DraggableItem) => {
         zIndex: (currentDragItem?.value?.id === item.id || currentResizeItem?.value?.id === item.id) ? 10 : 1,
         padding: '0.25rem',
         borderWidth: '1px',
-        borderStyle: 'solid',
+        borderStyle: 'dashed',
         borderColor: '#9ca3af',
         backgroundColor: '#ffffff'
-    }
-
-    if (item.content.includes('<table')) {
-        styles.padding = '0'
     }
 
     return styles
@@ -232,10 +219,23 @@ onUnmounted(() => {
                         item.textAlign === 'right' ? 'flex-end' : 'center'
                 }">
                     <template v-if="item.type === 'table'">
-                        <div v-html="item.content"></div>
+                        <TableItem :columns="item.dataColumns" :align="item.textAlign" />
+                    </template>
+                    <template v-else-if="item.type === 'image'">
+                        <div class="image-placeholder flex items-center justify-center text-gray-500">
+                            <div class="image-box flex items-center justify-center">
+                                <svg width="20" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                                    <rect x="3" y="3" width="18" height="14" rx="1.5" stroke="#6b7280" stroke-width="1.2" fill="none" />
+                                    <circle cx="8" cy="8" r="1.5" fill="#6b7280" />
+                                    <path d="M3 17l5-6 4 5 3-4 6 6" stroke="#6b7280" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
                     </template>
                     <template v-else>
-                        {{ item.content }}
+                        <p>
+                            {{ item.value }}
+                        </p>
                     </template>
                 </div>
             </div>
@@ -305,17 +305,19 @@ onUnmounted(() => {
     cursor: se-resize;
 }
 
-.draggable-table {
-    border-collapse: collapse;
+.image-placeholder {
     width: 100%;
+    height: 100%;
 }
 
-.draggable-table td {
-    border: 1px solid #d1d5db;
-    padding: 8px 16px;
-}
-
-.draggable-table tr:hover {
-    background-color: #f9fafb;
+.image-box {
+    width: 100%;
+    height: 100%;
+    background: #f1f5f9;
+    border: 1px dashed #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
 }
 </style>

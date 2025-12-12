@@ -1,40 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 // @ts-ignore
-import { useRouter } from 'vue-router'
 import SidebarTools from './components/SidebarTools.vue'
 import EditingPanel from './components/EditingPanel.vue'
 import MainEditor from './components/MainEditor.vue'
+import type { DraggableItem } from './types/editor'
+import { useKeyStore } from '../store/useKeyStore'
 
 const isLoading = ref(true)
-
-import { useDraggable } from './composables/useDraggable'
-import { useResizable } from './composables/useResizable'
-import { DEFAULT_ITEM_SIZE } from './constants/editor'
-import type { DraggableItem } from './types/editor'
-// @ts-ignore
-import toolData from './data/tool.json'
-
-interface SelectedProduct {
-  key: string
-  label: string
-  selected: boolean
-}
-
-const baseSelectedData = [
-  { key: 'name', label: 'Ürün Adı', selected: true },
-  { key: 'quantity', label: 'Miktar', selected: true },
-  { key: 'unitPrice', label: 'Birim Fiyat', selected: true },
-  { key: 'vatRate', label: 'KDV', selected: true }
-]
-
 const draggableItems = ref<DraggableItem[]>([])
 const selectedItemId = ref<string | null>(null)
-const selectedProducts = ref<SelectedProduct[]>(baseSelectedData)
-const isResizing = ref(false)
 
-const { isDragging, currentDragItem, dragOffset, handleDragEnd } = useDraggable()
-const { handleResizeMove, handleResizeEnd } = useResizable()
+const keyStore = useKeyStore()
+const keyList = computed(() => keyStore.keyList)
 //const { exportToJson } = useEditorIO(draggableItems)
 
 // Ruler değerlerini statik olarak hesaplama
@@ -43,102 +21,54 @@ const RULER_VALUES = Array.from(
   { length: Math.floor(794 / GRID_SIZE) + 1 },
   (_, i) => i * GRID_SIZE
 )
+const rulerValues = ref(RULER_VALUES)
 
 const selectedItem = computed(() => {
   return draggableItems.value.find(item => item.id === selectedItemId.value)
 })
 
-// A4 sayfa boyutları (piksel cinsinden)
-const A4_WIDTH = 210 * 3.78
-const A4_HEIGHT = 297 * 3.78
-
-// Grid'e göre pozisyonu hesaplayan fonksiyon optimizasyonu
-const snapToGrid = (x: number, y: number, itemWidth = DEFAULT_ITEM_SIZE.width, itemHeight = DEFAULT_ITEM_SIZE.height) => {
-  const snappedX = Math.max(0, Math.min(Math.round(x / GRID_SIZE) * GRID_SIZE, A4_WIDTH - itemWidth))
-  const snappedY = Math.max(0, Math.min(Math.round(y / GRID_SIZE) * GRID_SIZE, A4_HEIGHT - itemHeight))
-
-  return { x: snappedX, y: snappedY }
-}
-
-// Event handler'ları birleştirme
-const handleMouseMove = (event: MouseEvent) => {
-  if (!isDragging.value && !isResizing.value) return
-
-  if (isDragging.value && currentDragItem.value) {
-    const a4Page = document.querySelector('.a4-page') as HTMLElement
-    const rect = a4Page.getBoundingClientRect()
-
-    const draggedItem = draggableItems.value.find(
-      item => item.id === currentDragItem.value?.id
-    )
-
-    if (draggedItem) {
-      draggedItem.position = snapToGrid(
-        event.clientX - rect.left - dragOffset.value.x,
-        event.clientY - rect.top - dragOffset.value.y,
-        draggedItem.size.width,
-        draggedItem.size.height
-      )
-    }
-  }
-
-  if (isResizing.value) {
-    handleResizeMove(event)
-  }
-}
-
-const handleMouseUp = () => {
-  if (isDragging.value) handleDragEnd()
-  if (isResizing.value) {
-    isResizing.value = false
-    handleResizeEnd()
-  }
-}
-
-const handleChangeTableData = (tableData: string) => {
-  const tableItem = draggableItems.value.find(item => item.type === 'table')
-  if (!tableItem) return
-
-  const selectedKeys = selectedProducts.value
-    .filter(product => product.selected)
-    .map(product => product.key)
-
-  draggableItems.value = draggableItems.value.map(item => 
-    item.type === 'table' 
-      ? { ...item, content: tableData, headers: selectedKeys }
-      : item
-  )
-}
-
 onMounted(() => {
-  //window.addEventListener('resize', checkScreenSize)
-  window.addEventListener('mousemove', handleMouseMove)
-  window.addEventListener('mouseup', handleMouseUp)
-  
-  // Minimum yükleme süresi için setTimeout
+  // Simulate loading delay
   setTimeout(() => {
     isLoading.value = false
-  }, 300)
+  }, 50)
 })
 
-onUnmounted(() => {
-  //window.removeEventListener('resize', checkScreenSize)
-  window.removeEventListener('mousemove', handleMouseMove)
-  window.removeEventListener('mouseup', handleMouseUp)
-})
+watch(
+  keyList,
+  (v) => {
+    const list = Array.isArray(v) ? v : Array.isArray((v as any)?.value) ? (v as any).value : []
+    const values = new Set(list.map((k: any) => k.value))
 
-// Ruler değerlerini computed yerine ref olarak kullanma
-const rulerValues = ref(RULER_VALUES)
+    draggableItems.value = draggableItems.value.filter((item) => {
+      if (!item.value) return true
+      return values.has(item.value)
+    })
+
+    if (selectedItemId.value) {
+      const selected = draggableItems.value.find(i => i.id === selectedItemId.value)
+      if (!selected) {
+        selectedItemId.value = null
+      } else {
+        if (!selected.value || !values.has(selected.value)) {
+          selectedItemId.value = null
+        }
+      }
+    }
+  },
+  { deep: true }
+)
 </script>
 
 <template>
-  <Toast />
-  
   <!-- Loading Overlay -->
   <Transition name="fade">
-    <div v-if="isLoading" class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80 backdrop-blur-sm">
+    <div v-if="isLoading"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80 backdrop-blur-sm">
       <div class="text-center">
-        <div class="inline-block w-16 h-16 border-4 border-t-primary border-primary border-opacity-20 rounded-full animate-spin"></div>
+        <div
+          class="inline-block w-16 h-16 border-4 border-t-primary border-primary border-opacity-20 rounded-full animate-spin">
+        </div>
         <p class="mt-4 text-lg font-medium text-gray-700">Yükleniyor...</p>
       </div>
     </div>
@@ -146,8 +76,7 @@ const rulerValues = ref(RULER_VALUES)
 
   <div class="template-editor min-h-screen bg-gray-100 grid grid-cols-12">
     <div class="sidebar-tools col-span-2">
-      <SidebarTools @change-table-data="handleChangeTableData" :existing-items="draggableItems"
-        v-model:selectedProducts="selectedProducts" />
+      <SidebarTools />
     </div>
 
     <div class="col-span-8 flex flex-col max-h-screen pb-12">
@@ -200,7 +129,7 @@ const rulerValues = ref(RULER_VALUES)
 
 /* Grid arka planı */
 .grid-bg {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   background-size: 10px 10px;
@@ -211,7 +140,7 @@ const rulerValues = ref(RULER_VALUES)
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
@@ -227,9 +156,17 @@ const rulerValues = ref(RULER_VALUES)
 }
 
 /* Yön tutamaçları */
-.cursor-e-resize { cursor: e-resize; }
-.cursor-s-resize { cursor: s-resize; }
-.cursor-se-resize { cursor: se-resize; }
+.cursor-e-resize {
+  cursor: e-resize;
+}
+
+.cursor-s-resize {
+  cursor: s-resize;
+}
+
+.cursor-se-resize {
+  cursor: se-resize;
+}
 
 /* Cetvel */
 .sticky {

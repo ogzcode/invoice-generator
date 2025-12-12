@@ -8,11 +8,18 @@ export interface Size {
   height: number
 }
 
+export type DataColumn = {
+  label: string
+  value: string
+  width: number
+  textAlign: 'left' | 'center' | 'right'
+}
+
 export interface DraggableItem {
   id: string
-  content: string
-  type: string
-  key?: string
+  label: string
+  value: string
+  type: 'text' | 'table' | 'image' | 'data'
   position: {
     x: number
     y: number
@@ -27,8 +34,8 @@ export interface DraggableItem {
   textAlign: 'left' | 'center' | 'right'
   fontWeight: 'normal' | 'bold'
   fontStyle: 'normal' | 'italic'
-  textDecoration: 'none' | 'underline'
-  headers?: string[]
+  textDecoration: 'none' | 'underline',
+  dataColumns?: DataColumn[]
 }
 
 export interface ExportData {
@@ -47,3 +54,9 @@ export interface DraggableTableItem extends DraggableItem {
   tableData: ProductTableData;
   headers: string[];
 } 
+
+export type KeyItem = {
+    label: string
+    value: string
+    type?: 'text' | 'table' | 'image' | 'data'
+}

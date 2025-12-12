@@ -1,0 +1,30 @@
+# Backend (Python) ignores
+
+# Virtualenvs
+venv/
+.venv/
+**/venv/
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Generated HTML output from processors
+processed_*.html
+template_*.html
